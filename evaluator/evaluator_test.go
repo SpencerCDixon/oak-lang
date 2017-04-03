@@ -138,14 +138,14 @@ func TestReturnStatements(t *testing.T) {
 		{"if (10 > 1) { return 10; }", 10},
 		{
 			`
-if (10 > 1) {
-	if (10 > 1) {
-		return 10;
-	}
+			if (10 > 1) {
+				if (10 > 1) {
+					return 10;
+				}
 
-	return 1;
-}
-`,
+				return 1;
+			}
+			`,
 			10,
 		},
 		// {
@@ -210,19 +210,23 @@ func TestErrorHandling(t *testing.T) {
 		},
 		{
 			`
-if (10 > 1) {
-  if (10 > 1) {
-    return true + false;
-  }
+			if (10 > 1) {
+				if (10 > 1) {
+					return true + false;
+				}
 
-  return 1;
-}
-`,
+				return 1;
+			}
+			`,
 			"unknown operator: BOOLEAN + BOOLEAN",
 		},
 		{
 			"foobar",
 			"identifier not found: foobar",
+		},
+		{
+			`"Hello" - "World"`,
+			"unknown operator: STRING - STRING",
 		},
 	}
 
@@ -304,19 +308,47 @@ func TestFunctionApplication(t *testing.T) {
 
 func TestEnclosingEnvironments(t *testing.T) {
 	input := `
-let first = 10;
-let second = 10;
-let third = 10;
+	let first = 10;
+	let second = 10;
+	let third = 10;
 
-let ourFunction = fn(first) {
-  let second = 20;
+	let ourFunction = fn(first) {
+		let second = 20;
 
-  first + second + third;
-};
+		first + second + third;
+	};
 
-ourFunction(20) + first + second;`
+	ourFunction(20) + first + second;`
 
 	testIntegerObject(t, testEval(input), 70)
+}
+
+func TestStringLiteral(t *testing.T) {
+	input := `"Hello World!"`
+
+	evaluated := testEval(input)
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	if str.Value != "Hello World!" {
+		t.Errorf("String has wrong value. got=%q", str.Value)
+	}
+}
+
+func TestStringConcatenation(t *testing.T) {
+	input := `"Hello" + " " + "World!"`
+
+	evaluated := testEval(input)
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	if str.Value != "Hello World!" {
+		t.Errorf("String has wrong value. got=%q", str.Value)
+	}
 }
 
 func testEval(input string) object.Object {
