@@ -1,8 +1,8 @@
 package evaluator
 
 import (
-	"github.com/spencercdixon/monkey/ast"
-	"github.com/spencercdixon/monkey/object"
+	"github.com/spencercdixon/oak/ast"
+	"github.com/spencercdixon/oak/object"
 )
 
 var (
@@ -19,6 +19,7 @@ func Eval(node ast.Node) object.Object {
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression)
 
+	// Expressions
 	case *ast.PrefixExpression:
 		right := Eval(node.Right)
 		return evalPrefixExpression(node.Operator, right)
@@ -28,19 +29,26 @@ func Eval(node ast.Node) object.Object {
 		right := Eval(node.Right)
 		return evalInfixExpression(node.Operator, left, right)
 
-	// Expressions
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value}
 
 	case *ast.Boolean:
 		return nativeBoolToBooleanObject(node.Value)
 
+	case *ast.BlockStatement:
+		return evalStatements(node.Statements)
+
+	case *ast.IfExpression:
+		return evalIfExpression(node)
+
 	}
 
 	return nil
 }
 
+//----------
 // Evaluations
+//----------
 func evalStatements(stmts []ast.Statement) object.Object {
 	var result object.Object
 	for _, statement := range stmts {
@@ -118,10 +126,24 @@ func evalIntegerInfixExpression(operator string, left, right object.Object) obje
 	default:
 		return NULL
 	}
-
 }
 
-// Perf Utilities
+func evalIfExpression(ie *ast.IfExpression) object.Object {
+	condition := Eval(ie.Condition)
+
+	if isTruthy(condition) {
+		return Eval(ie.Consequence)
+	} else if ie.Alternative != nil {
+		return Eval(ie.Alternative)
+	} else {
+		// default to always returning null
+		return NULL
+	}
+}
+
+//----------
+// Utilities
+//----------
 func nativeBoolToBooleanObject(input bool) *object.Boolean {
 	if input {
 		return TRUE
@@ -131,4 +153,18 @@ func nativeBoolToBooleanObject(input bool) *object.Boolean {
 
 func isInteger(obj object.Object) bool {
 	return obj.Type() == object.INTEGER_OBJ
+}
+
+func isTruthy(obj object.Object) bool {
+	switch obj {
+	case NULL:
+		return false
+	case TRUE:
+		return true
+	case FALSE:
+		return false
+	// IMPORTANT: essentially means all values in lang will be truthy except null/false
+	default:
+		return true
+	}
 }

@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/user"
 
-	"github.com/spencercdixon/monkey/repl"
+	"github.com/spencercdixon/oak/repl"
 )
 
 func main() {

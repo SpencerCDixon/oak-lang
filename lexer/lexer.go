@@ -1,6 +1,6 @@
 package lexer
 
-import "github.com/spencercdixon/monkey/token"
+import "github.com/spencercdixon/oak/token"
 
 // Monkey only supports ASCII and not UTF-8.
 

@@ -1,1 +1,5 @@
-# Implementation of the Monkey Interpreter in Go
+# Oak
+
+A simple Ruby/JavaScript like language implemented in Go.
+
+

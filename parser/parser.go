@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/spencercdixon/monkey/ast"
-	"github.com/spencercdixon/monkey/lexer"
-	"github.com/spencercdixon/monkey/token"
+	"github.com/spencercdixon/oak/ast"
+	"github.com/spencercdixon/oak/lexer"
+	"github.com/spencercdixon/oak/token"
 )
 
 const (

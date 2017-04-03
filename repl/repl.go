@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/spencercdixon/monkey/evaluator"
-	"github.com/spencercdixon/monkey/lexer"
-	"github.com/spencercdixon/monkey/parser"
+	"github.com/spencercdixon/oak/evaluator"
+	"github.com/spencercdixon/oak/lexer"
+	"github.com/spencercdixon/oak/parser"
 )
 
 const PROMPT = ">> "

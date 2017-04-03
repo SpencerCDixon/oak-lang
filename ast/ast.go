@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/spencercdixon/monkey/token"
+	"github.com/spencercdixon/oak/token"
 )
 
 // Every node in the AST must satisfy this interface
