@@ -2,8 +2,7 @@ package lexer
 
 import "github.com/spencercdixon/oak/token"
 
-// Monkey only supports ASCII and not UTF-8.
-
+// Oak only supports ASCII and not UTF-8.
 type Lexer struct {
 	input        string
 	position     int
@@ -160,8 +159,8 @@ func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
-// Not taking into consideration floats, octals, etc.  Exercise to the read to
-// enhance Monkey Lang to support floats, this would be the place to do it.
+// Not taking into consideration floats, octals, etc.
+// TODO: enhance Oak Lang to support floats, this would be the place to do it.
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }

@@ -1,0 +1,2 @@
+let result = get("http://google.com")
+puts(result)

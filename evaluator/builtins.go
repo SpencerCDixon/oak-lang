@@ -2,6 +2,8 @@ package evaluator
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 
 	"github.com/spencercdixon/oak/object"
 )
@@ -109,6 +111,24 @@ var builtins = map[string]*object.Builtin{
 			newElements[length] = args[1]
 
 			return &object.Array{Elements: newElements}
+		},
+	},
+	"get": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("wrong number of arguments. got=%d, want=1", len(args))
+			}
+
+			resp, err := http.Get(args[0].Inspect())
+			if err != nil {
+				return newError("unable to fetch URL %s", args[0].Inspect())
+			}
+			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return newError("error reading response %v", err)
+			}
+			return &object.String{Value: string(body)}
 		},
 	},
 }
