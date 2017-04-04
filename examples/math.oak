@@ -1,0 +1,8 @@
+let add = fn(a, b) { a + b }
+let sub = fn(a, b) { a - b }
+
+puts("Adding some numbers...")
+puts(add(40, 2))
+
+puts("Subtracting some numbers...")
+puts(sub(40, 2))

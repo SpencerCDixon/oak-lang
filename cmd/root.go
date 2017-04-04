@@ -12,7 +12,7 @@ var cfgFile string
 
 var RootCmd = &cobra.Command{
 	Use:   "oak",
-	Short: "Programming language geared towards HTTP scripts",
+	Short: "A tree that bears acorns as fruit, and typically has lobed deciduous leaves. Also, lets you write code.",
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
