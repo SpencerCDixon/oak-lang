@@ -33,6 +33,7 @@ $ oak repl
 * Strings (double quote)
 * Functions (defined with 'fn')
 * Closures
+* [Error reporting](#errors)
 * ... more full docs coming ...
 
 ## CLI
@@ -53,6 +54,24 @@ Flags:
       --config string   config file (default is $HOME/.oak.yaml)
 
 Use "oak [command] --help" for more information about a command.
+```
+
+## Errors
+When running some broken oak code like:  
+```
+let queue = []
+
+push(queu, 1)
+```
+
+Oak will give you nice error messages using [Levenshtien
+Distance](https://en.wikipedia.org/wiki/Levenshtein_distance) algorithm.  
+```
+ERROR: identifier queu not found.
+
+Did you mean one of:
+
+ queue
 ```
 
 ## TODO

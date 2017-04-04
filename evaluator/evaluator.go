@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/arbovm/levenshtein"
 	"github.com/spencercdixon/oak/ast"
 	"github.com/spencercdixon/oak/object"
 )
@@ -161,20 +160,10 @@ func evalIdentifier(node *ast.Identifier, env *object.Environment) object.Object
 	}
 
 	keys := env.GetKeys()
-	matches := make(map[string]int)
-	for _, k := range keys {
-		matches[k] = levenshtein.Distance(k, node.Value)
-	}
-
-	display := []string{}
-	for k := range matches {
-		if matches[k] < 10 {
-			display = append(display, k)
-		}
-	}
+	found := TypoSuggestions(keys, node.Value)
 
 	// user typo probs, add better error message here, 'Did you mean... ___?'
-	return newError("identifier not found: %s. \nDid you mean one of: \n%s?", node.Value, strings.Join(display, ", "))
+	return newError("identifier %s not found. \n\nDid you mean one of: \n\n  %s\n", node.Value, strings.Join(found, ", "))
 }
 
 func evalPrefixExpression(operator string, right object.Object) object.Object {

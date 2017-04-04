@@ -1,4 +1,3 @@
-let myHardVariableToRemember = "hello world"
-let HardVariableToRemember = "42"
+let queue = []
 
-puts(yHardVariableToRemember)
+push(queu, 1)
