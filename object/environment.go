@@ -31,3 +31,11 @@ func (e *Environment) Set(name string, val Object) Object {
 	e.store[name] = val
 	return val
 }
+
+func (e *Environment) GetKeys() []string {
+	keys := make([]string, 0, len(e.store))
+	for k := range e.store {
+		keys = append(keys, k)
+	}
+	return keys
+}

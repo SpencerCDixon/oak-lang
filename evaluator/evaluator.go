@@ -2,7 +2,9 @@ package evaluator
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/arbovm/levenshtein"
 	"github.com/spencercdixon/oak/ast"
 	"github.com/spencercdixon/oak/object"
 )
@@ -158,8 +160,21 @@ func evalIdentifier(node *ast.Identifier, env *object.Environment) object.Object
 		return builtin
 	}
 
+	keys := env.GetKeys()
+	matches := make(map[string]int)
+	for _, k := range keys {
+		matches[k] = levenshtein.Distance(k, node.Value)
+	}
+
+	display := []string{}
+	for k := range matches {
+		if matches[k] < 10 {
+			display = append(display, k)
+		}
+	}
+
 	// user typo probs, add better error message here, 'Did you mean... ___?'
-	return newError("identifier not found: " + node.Value)
+	return newError("identifier not found: %s. \nDid you mean one of: \n%s?", node.Value, strings.Join(display, ", "))
 }
 
 func evalPrefixExpression(operator string, right object.Object) object.Object {

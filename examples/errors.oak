@@ -1,0 +1,4 @@
+let myHardVariableToRemember = "hello world"
+let HardVariableToRemember = "42"
+
+puts(yHardVariableToRemember)

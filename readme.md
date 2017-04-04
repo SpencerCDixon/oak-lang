@@ -54,3 +54,11 @@ Flags:
 
 Use "oak [command] --help" for more information about a command.
 ```
+
+## TODO
+* [x] add Levenshtein Distance algorithm for better error msgs
+* [ ] add ability to write comments in source code
+* [ ] add concurrent GET built in function
+* [ ] write documentation for basic data structures
+* [ ] create some 'real-world' examples of using the language
+* [ ] add benchmarking to a real world http example to compare to Ruby
