@@ -89,6 +89,25 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 		return applyFunction(function, args)
 
+	case *ast.ArrayLiteral:
+		elements := evalExpressions(node.Elements, env)
+		if len(elements) == 1 && isError(elements[0]) {
+			return elements[0]
+		}
+		return &object.Array{Elements: elements}
+
+	case *ast.IndexExpression:
+		left := Eval(node.Left, env)
+		if isError(left) {
+			return left
+		}
+
+		index := Eval(node.Index, env)
+		if isError(index) {
+			return index
+		}
+		return evalIndexExpression(left, index)
+
 	}
 	return nil
 }
@@ -129,11 +148,18 @@ func evalBlockStatement(block *ast.BlockStatement, env *object.Environment) obje
 }
 
 func evalIdentifier(node *ast.Identifier, env *object.Environment) object.Object {
-	val, ok := env.Get(node.Value)
-	if !ok {
-		return newError("identifier not found: " + node.Value)
+	// is it a user defined Identifier?
+	if val, ok := env.Get(node.Value); ok {
+		return val
 	}
-	return val
+
+	// is it a oak defined func/identifier?
+	if builtin, ok := builtins[node.Value]; ok {
+		return builtin
+	}
+
+	// user typo probs, add better error message here, 'Did you mean... ___?'
+	return newError("identifier not found: " + node.Value)
 }
 
 func evalPrefixExpression(operator string, right object.Object) object.Object {
@@ -253,15 +279,40 @@ func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Obje
 	}
 }
 
+func evalIndexExpression(left, index object.Object) object.Object {
+	switch {
+	case isArray(left) && isInteger(index):
+		return evalArrayIndexExpression(left, index)
+	default:
+		return newError("index operator not supported: %s", left.Type())
+	}
+}
+
+func evalArrayIndexExpression(left, index object.Object) object.Object {
+	arrayObject := left.(*object.Array)
+	idx := index.(*object.Integer).Value
+	max := int64(len(arrayObject.Elements) - 1)
+
+	// this determines our 'out of bounds' return value for arrays
+	if idx < 0 || idx > max {
+		return NULL
+	}
+	return arrayObject.Elements[idx]
+}
+
 func applyFunction(fn object.Object, args []object.Object) object.Object {
-	function, ok := fn.(*object.Function)
-	if !ok {
+	switch fn := fn.(type) {
+	case *object.Function:
+		extendedEnv := extendFunctionEnv(fn, args)
+		evaluated := Eval(fn.Body, extendedEnv)
+		return unwrapReturnValue(evaluated)
+
+	case *object.Builtin:
+		return fn.Fn(args...)
+
+	default:
 		return newError("not a function: %s", fn.Type())
 	}
-
-	extendedEnv := extendFunctionEnv(function, args)
-	evaluated := Eval(function.Body, extendedEnv)
-	return unwrapReturnValue(evaluated)
 }
 
 func extendFunctionEnv(fn *object.Function, args []object.Object) *object.Environment {
@@ -304,6 +355,13 @@ func isInteger(obj object.Object) bool {
 func isString(obj object.Object) bool {
 	if obj != nil {
 		return obj.Type() == object.STRING_OBJ
+	}
+	return false
+}
+
+func isArray(obj object.Object) bool {
+	if obj != nil {
+		return obj.Type() == object.ARRAY_OBJ
 	}
 	return false
 }
