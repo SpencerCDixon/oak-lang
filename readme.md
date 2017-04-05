@@ -84,6 +84,7 @@ Oak locally here are some things that might help:
   + `go get github.com/tj/mmake/cmd/mmake`
   + Add `alias make=mmake` to bash/zshrc.
   + Now you can run: `make help` to see what targets are available
+* Oak uses [Pratt Parsing](http://web.archive.org/web/20151223215421/http://hall.org.ua/halls/wizzard/pdf/Vaughan.Pratt.TDOP.pdf) for its parser.  
 
 ## TODO
 * [x] add Levenshtein Distance algorithm for better error msgs
