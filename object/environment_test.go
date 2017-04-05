@@ -27,16 +27,15 @@ func TestGetKeys(t *testing.T) {
 	env.Set("secondKey", str)
 
 	keys := env.GetKeys()
-	if !contains(keys, "key") || !contains(keys, "secondKey") {
-		t.Fatal("Couldn't find key in environment")
-	}
+	expectKeyExists(t, keys, "key")
+	expectKeyExists(t, keys, "secondKey")
 }
 
-func contains(keys []string, key string) bool {
+func expectKeyExists(t *testing.T, keys []string, key string) {
 	for _, k := range keys {
 		if key == k {
-			return true
+			return
 		}
 	}
-	return false
+	t.Fatalf("Couldn't find key %s in keys: %s", key, keys)
 }

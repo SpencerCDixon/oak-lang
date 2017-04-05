@@ -221,8 +221,8 @@ func TestErrorHandling(t *testing.T) {
 			"unknown operator: BOOLEAN + BOOLEAN",
 		},
 		{
-			"foobar",
-			"identifier not found: foobar",
+			`let cat = "boo"; let doggie = "2"; let dog = "1"; do`,
+			"identifier do not found. \n\nDid you mean one of: \n\n  dog\n",
 		},
 		{
 			`"Hello" - "World"`,

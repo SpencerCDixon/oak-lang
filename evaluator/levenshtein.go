@@ -49,7 +49,7 @@ func min(a, b, c int) int {
 	return c
 }
 
-const MISS_THRESHOLD = 10
+const MISS_THRESHOLD = 2
 
 func TypoSuggestions(keys []string, miss string) []string {
 	matches := make(map[string]int)
