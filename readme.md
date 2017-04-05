@@ -74,10 +74,23 @@ Did you mean one of:
  queue
 ```
 
+## Development
+If you happen to be interested in adding functionality or just want to play with
+Oak locally here are some things that might help:
+
+* Go v1.8+ installed
+* Check out the [Makefile](./Makefile) for available targets.
+  + [I use T.J's mmake for a better Makefile experience](https://github.com/tj/mmake)
+  + `go get github.com/tj/mmake/cmd/mmake`
+  + Add `alias make=mmake` to bash/zshrc.
+  + Now you can run: `make help` to see what targets are available
+
 ## TODO
 * [x] add Levenshtein Distance algorithm for better error msgs
 * [ ] add ability to write comments in source code
-* [ ] add concurrent GET built in function
+* [ ] add nice HTTP primitives to make oak shine
 * [ ] write documentation for basic data structures
 * [ ] create some 'real-world' examples of using the language
 * [ ] add benchmarking to a real world http example to compare to Ruby
+* [ ] add basic module system so code can be separated
+
