@@ -109,6 +109,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 		return evalIndexExpression(left, index)
 
+	case *ast.HashLiteral:
+		return evalHashLiteral(node, env)
+
 	}
 	return nil
 }
@@ -287,6 +290,8 @@ func evalIndexExpression(left, index object.Object) object.Object {
 	switch {
 	case isArray(left) && isInteger(index):
 		return evalArrayIndexExpression(left, index)
+	case isHash(left):
+		return evalHashIndexExpression(left, index)
 	default:
 		return newError("index operator not supported: %s", left.Type())
 	}
@@ -302,6 +307,50 @@ func evalArrayIndexExpression(left, index object.Object) object.Object {
 		return NULL
 	}
 	return arrayObject.Elements[idx]
+}
+
+func evalHashIndexExpression(hash, index object.Object) object.Object {
+	hashObject := hash.(*object.Hash)
+
+	key, ok := index.(object.Hashable)
+	if !ok {
+		return newError("unusable as hash key: %s", index.Type())
+	}
+
+	pair, ok := hashObject.Pairs[key.HashKey()]
+	// if we can't find the value in the hash return empty
+	if !ok {
+		return NULL
+	}
+
+	return pair.Value
+}
+
+func evalHashLiteral(node *ast.HashLiteral, env *object.Environment) object.Object {
+	pairs := make(map[object.HashKey]object.HashPair)
+
+	for keyNode, valueNode := range node.Pairs {
+		key := Eval(keyNode, env)
+		if isError(key) {
+			return key
+		}
+
+		// use the Hashable interface in our object system to determine if this
+		// expression is allowed to be used as a hash key (i.e. implements // HashKey())
+		hashKey, ok := key.(object.Hashable)
+		if !ok {
+			return newError("unusable as hash key: %s", key.Type())
+		}
+
+		value := Eval(valueNode, env)
+		if isError(value) {
+			return value
+		}
+
+		hashed := hashKey.HashKey()
+		pairs[hashed] = object.HashPair{Key: key, Value: value}
+	}
+	return &object.Hash{Pairs: pairs}
 }
 
 func applyFunction(fn object.Object, args []object.Object) object.Object {
@@ -366,6 +415,13 @@ func isString(obj object.Object) bool {
 func isArray(obj object.Object) bool {
 	if obj != nil {
 		return obj.Type() == object.ARRAY_OBJ
+	}
+	return false
+}
+
+func isHash(obj object.Object) bool {
+	if obj != nil {
+		return obj.Type() == object.HASH_OBJ
 	}
 	return false
 }
