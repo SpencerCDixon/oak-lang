@@ -34,7 +34,7 @@ var replCommand = &cobra.Command{
 
 		fmt.Println(NAME)
 		fmt.Printf("Hello %s!  This is the Oak programming language!\n", user.Username)
-		fmt.Printf("Feel free to type in commands\n")
+		fmt.Printf("Feel free to type in commands ('exit' to leave)\n")
 		repl.Start(os.Stdin, os.Stdout)
 	},
 }

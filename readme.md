@@ -33,6 +33,7 @@ $ oak repl
 * Strings (double quote)
 * Functions (defined with 'fn')
 * Closures
+* Hashes
 * [Error reporting](#errors)
 * ... more full docs coming ...
 

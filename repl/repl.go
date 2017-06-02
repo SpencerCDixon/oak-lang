@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"os"
 
 	"github.com/spencercdixon/oak/evaluator"
 	"github.com/spencercdixon/oak/lexer"
@@ -25,6 +26,12 @@ func Start(in io.Reader, out io.Writer) {
 		}
 
 		line := scanner.Text()
+		// provide a way to exit repl
+		if line == "exit" {
+			fmt.Println("Exiting REPL... Stay grassy folks.")
+			os.Exit(1)
+		}
+
 		l := lexer.New(line)
 		p := parser.New(l)
 
