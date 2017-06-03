@@ -35,7 +35,7 @@ $ oak repl
 * Closures
 * Hashes
 * [Error reporting](#errors)
-* ... more full docs coming ...
+* ... more complete docs coming ...
 
 ## CLI
 
@@ -95,6 +95,6 @@ Oak locally here are some things that might help:
 * [ ] create some 'real-world' examples of using the language
 * [ ] add benchmarking to a real world http example to compare to Ruby
 * [ ] add basic module system so code can be separated
-* [ ] add support for hashes
+* [x] add support for hashes
 * [ ] add support for http request primitive
 * [ ] add `<<` append string support
