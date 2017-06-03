@@ -57,6 +57,7 @@ todo:
 	@grep \
 		--text \
 		--color \
+		--exclude Makefile \
 		-nRo ' TODO:.*' .
 
 test:
