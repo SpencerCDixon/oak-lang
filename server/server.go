@@ -42,11 +42,6 @@ func generateAst(input string) *ast.Program {
 
 func astHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		if r.Body == nil {
-			http.Error(w, "Missing request body", http.StatusBadRequest)
-			return
-		}
-
 		req := OakRequest{}
 		err := json.NewDecoder(r.Body).Decode(&req)
 		defer r.Body.Close()
@@ -66,11 +61,6 @@ func astHandler(w http.ResponseWriter, r *http.Request) {
 
 func evaluationHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		if r.Body == nil {
-			http.Error(w, "Missing request body", http.StatusBadRequest)
-			return
-		}
-
 		req := OakRequest{}
 		err := json.NewDecoder(r.Body).Decode(&req)
 		defer r.Body.Close()

@@ -26,7 +26,8 @@ func Start(in io.Reader, out io.Writer) {
 		}
 
 		line := scanner.Text()
-		// provide a way to exit repl
+
+		// User friendly way to exit the REPL
 		if line == "exit" {
 			fmt.Println("Exiting REPL... Stay grassy folks.")
 			os.Exit(1)
