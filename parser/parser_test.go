@@ -154,7 +154,7 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	}
 }
 
-func TestParsingPrefixExpessions(t *testing.T) {
+func TestParsingPrefixExpressions(t *testing.T) {
 	prefixTests := []struct {
 		input        string
 		operator     string
